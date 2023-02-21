@@ -1,9 +1,9 @@
 import '@fontsource/open-sans/300.css';
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/700.css';
-import { extendBaseTheme } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react';
 
-const theme = extendBaseTheme({
+const theme = extendTheme({
 	colors: {
 		brand: {
 			100: '#FF3C00',
