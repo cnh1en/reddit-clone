@@ -8,28 +8,21 @@ import {
 	PopoverCloseButton,
 	PopoverContent,
 	PopoverTrigger,
+	useDisclosure,
 } from '@chakra-ui/react';
 import AuthButtons from './AuthButtons';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import AuthModal from '../../Modal/Auth/AuthModal';
 
 type Props = {};
 
 const RightContent = (props: Props) => {
 	return (
 		<>
-			<Flex justifyContent="center" alignItems="center" gap={2}>
+			<Flex justifyContent="center" alignItems="center">
 				<AuthButtons />
-
-				<Button
-					color="blue.500"
-					variant="outline"
-					display={{
-						md: 'none',
-					}}
-				>
-					<HamburgerIcon color="blue.500" />
-				</Button>
 			</Flex>
+
+			<AuthModal />
 		</>
 	);
 };

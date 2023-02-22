@@ -1,19 +1,36 @@
 import React from 'react';
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
+import { useSetRecoilState } from 'recoil';
+import { authModalState } from '@/src/atoms/authModalAtom';
+import { ViewModalProps } from '@/src/types';
 
 type Props = {};
 
-const AuthButtons = (props: Props) => {
+const AuthButtons = () => {
+	const setAuthModal = useSetRecoilState(authModalState);
+
+	const onOpenAuthModal = (view: ViewModalProps) => {
+		setAuthModal({
+			open: true,
+			view,
+		});
+	};
+
 	return (
-		<Flex
-			gap={2}
-			display={{
-				base: 'none',
-				md: 'flex',
-			}}
-		>
-			<Button variant="outline">Log in</Button>
-			<Button bg="blue.500" color="white">
+		<Flex gap={2} justify="center">
+			<Button
+				variant="outline"
+				height="36px"
+				onClick={() => onOpenAuthModal('login')}
+			>
+				Log in
+			</Button>
+			<Button
+				bg="blue.500"
+				color="white"
+				height="36px"
+				onClick={() => onOpenAuthModal('signup')}
+			>
 				Sign up
 			</Button>
 		</Flex>

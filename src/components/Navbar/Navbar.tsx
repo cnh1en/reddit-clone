@@ -10,10 +10,10 @@ const Navbar = () => {
 	return (
 		<Flex
 			bg="white"
-			height={50}
+			height="50px"
 			padding="6px 12px"
 			alignItems="center"
-			gap={10}
+			gap={1}
 		>
 			<Image src="/images/redditlogo.png" alt="reddit" width={80} height={80} />
 			<SearchInput />
