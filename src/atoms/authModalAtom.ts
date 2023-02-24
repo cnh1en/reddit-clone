@@ -5,7 +5,7 @@ export type AuthModalStateProps = {
 	view: 'login' | 'signup' | 'resetPassword';
 };
 export const authModalState = atom<AuthModalStateProps>({
-	key: 'authModalState',
+	key: 'authModalStateAtom',
 	default: {
 		open: false,
 		view: 'login',

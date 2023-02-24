@@ -46,9 +46,10 @@ const Login = (props: Props) => {
 					type="email"
 					placeholder="Email"
 					onChange={onChange}
-					mb={2}
+					fontSize={12}
+					mb={3}
 					required
-					_placeholder={{ color: 'gray.500' }}
+					_placeholder={{ color: 'gray.500', fontSize: '12px' }}
 					_hover={{
 						bg: 'white',
 						border: '1px solid',
@@ -67,8 +68,9 @@ const Login = (props: Props) => {
 					type="password"
 					placeholder="Password"
 					onChange={onChange}
+					fontSize={12}
 					required
-					_placeholder={{ color: 'gray.500' }}
+					_placeholder={{ color: 'gray.500', fontSize: '12px' }}
 					_hover={{
 						bg: 'white',
 						border: '1px solid',

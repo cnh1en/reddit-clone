@@ -26,7 +26,7 @@ const AuthModal = () => {
 
 	return (
 		<>
-			<Modal isOpen={authModal.open} onClose={handleClose}>
+			<Modal isOpen={authModal.open} onClose={handleClose} trapFocus={false}>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalCloseButton />
