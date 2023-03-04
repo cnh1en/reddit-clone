@@ -23,7 +23,13 @@ import {
 import { IoMdLock } from 'react-icons/io';
 import { AiFillEye } from 'react-icons/ai';
 import { BsFillPersonFill } from 'react-icons/bs';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import {
+	doc,
+	getDoc,
+	setDoc,
+	serverTimestamp,
+	runTransaction,
+} from 'firebase/firestore';
 import { firestore, auth } from '@/src/firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FirebaseUser } from '@/src/types';
@@ -53,9 +59,9 @@ const CreateCommunity = ({ isOpen, onClose }: Props) => {
 	};
 
 	const handleCreateCommunity = async () => {
+		setIsLoading(true);
 		try {
 			const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-
 			if (format.test(communityName) || communityName.length < 3) {
 				setError(
 					'Community names must be between 3-21 characrters, and can not contain special characters'
@@ -64,19 +70,33 @@ const CreateCommunity = ({ isOpen, onClose }: Props) => {
 			}
 
 			const communityRef = doc(firestore, 'communities', communityName); // reference
-			const communityDoc = await getDoc(communityRef);
+			await runTransaction(firestore, async (transaction) => {
+				const communityDoc = await transaction.get(communityRef);
 
-			if (communityDoc.exists()) {
-				setError(`Sorry, r/${communityName} is already taken. Try another`);
-				return;
-			}
+				if (communityDoc.exists()) {
+					setError(`Sorry, r/${communityName} is already taken. Try another`);
+					return;
+				}
+				// create community
+				transaction.set(communityRef, {
+					creatorId: (user as FirebaseUser)['uid'],
+					privacyType: communityType,
+					numberOfMembers: 1,
+					createdAt: serverTimestamp(),
+				});
 
-			setIsLoading(true);
-			await setDoc(communityRef, {
-				creatorId: (user as FirebaseUser)['uid'],
-				privacyType: communityType,
-				numberOfMembers: 1,
-				createdAt: serverTimestamp(),
+				// create communitySnippet on User
+
+				transaction.set(
+					doc(
+						firestore,
+						`users/${user?.uid}/communitySnippets/${communityName}`
+					),
+					{
+						communityId: communityName,
+						isModerator: true,
+					}
+				);
 			});
 		} catch (error) {
 			console.log('[LOG] ~ handleCreateCommunity:', error);

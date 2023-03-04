@@ -1,12 +1,15 @@
 import { authModalState } from '@/src/atoms/authModalAtom';
-import { auth } from '@/src/firebase/clientApp';
+import { auth, firestore } from '@/src/firebase/clientApp';
 import { FIREBASE_ERRORS } from '@/src/firebase/errors';
 import { Button, Flex, FormControl, Input, Text } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 import * as yup from 'yup';
+import type { User, UserCredential } from 'firebase/auth';
+import { useEffect } from 'react';
 
 type SignupProps = {
 	email: string;
@@ -27,7 +30,7 @@ const Signup = () => {
 			.oneOf([yup.ref('password')], 'Confirm password must match'),
 	});
 
-	const [createUserWithEmailAndPassword, user, loading, error] =
+	const [createUserWithEmailAndPassword, userCred, loading, error] =
 		useCreateUserWithEmailAndPassword(auth);
 
 	const setAuthModal = useSetRecoilState(authModalState);
@@ -43,6 +46,21 @@ const Signup = () => {
 	const onSubmit = (values: SignupProps) => {
 		createUserWithEmailAndPassword(values.email, values.password);
 	};
+
+	const onCreateUser = async (user: User) => {
+		await setDoc(doc(firestore, 'users', user.uid), {
+			uid: user.uid,
+			email: user.email,
+			displayName: user.displayName,
+			providerData: user.providerData,
+		});
+	};
+
+	useEffect(() => {
+		if (userCred) {
+			onCreateUser(userCred.user);
+		}
+	}, [userCred]);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
