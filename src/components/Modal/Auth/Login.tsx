@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
-import {
-	Button,
-	Flex,
-	FormControl,
-	FormLabel,
-	Input,
-	Text,
-} from '@chakra-ui/react';
+import { Button, Flex, FormControl, Input, Text } from '@chakra-ui/react';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '@/src/atoms/authModalAtom';
 import OAuthButtons from './OAuthButtons';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '@/src/firebase/clientApp';
+import { FIREBASE_ERRORS } from '@/src/firebase/errors';
 
-type Props = {};
-
-const Login = (props: Props) => {
+const Login = () => {
 	const [loginForm, setLoginForm] = useState({
 		email: '',
 		password: '',
@@ -27,7 +21,13 @@ const Login = (props: Props) => {
 			[event.target.name]: event.target.value,
 		}));
 	};
-	const onSubmit = () => {};
+
+	const [signInWithEmailAndPassword, user, loading, error] =
+		useSignInWithEmailAndPassword(auth);
+
+	const handleLogin = () => {
+		signInWithEmailAndPassword(loginForm.email, loginForm.password);
+	};
 
 	return (
 		<>
@@ -40,15 +40,15 @@ const Login = (props: Props) => {
 			>
 				or
 			</Text>
-			<FormControl onSubmit={onSubmit}>
+			<FormControl>
 				<Input
+					id="email"
 					name="email"
 					type="email"
 					placeholder="Email"
 					onChange={onChange}
 					fontSize={12}
 					mb={3}
-					required
 					_placeholder={{ color: 'gray.500', fontSize: '12px' }}
 					_hover={{
 						bg: 'white',
@@ -64,12 +64,12 @@ const Login = (props: Props) => {
 					bg="gray.50"
 				/>
 				<Input
+					id="password"
 					name="password"
 					type="password"
 					placeholder="Password"
 					onChange={onChange}
 					fontSize={12}
-					required
 					_placeholder={{ color: 'gray.500', fontSize: '12px' }}
 					_hover={{
 						bg: 'white',
@@ -84,26 +84,49 @@ const Login = (props: Props) => {
 					}}
 					bg="gray.50"
 				/>
-
-				<Button variant="solid" width="full" height="36px" my={4}>
+				<Text fontSize={12} mt={2} color="red" textAlign="center">
+					{error?.code &&
+						FIREBASE_ERRORS[error.code as keyof typeof FIREBASE_ERRORS]}
+				</Text>
+				<Button
+					variant="solid"
+					width="full"
+					height="36px"
+					my={3}
+					onClick={handleLogin}
+					isLoading={loading}
+					isDisabled={!loginForm.email || !loginForm.password}
+				>
 					Log in
 				</Button>
-
-				<Flex fontSize="9pt" justify="center">
-					<Text mr={1}>New here ?</Text>
-					<Text
-						color="blue.500"
-						fontWeight={700}
-						cursor="pointer"
-						textTransform="uppercase"
-						onClick={() =>
-							setAuthModal((prev) => ({ ...prev, view: 'signup' }))
-						}
-					>
-						sign up
-					</Text>
-				</Flex>
 			</FormControl>
+			<Flex fontSize="9pt" justify="center" mb={1}>
+				<Text mr={1}>Forgot your password ?</Text>
+				<Text
+					color="blue.500"
+					fontWeight={700}
+					cursor="pointer"
+					textTransform="uppercase"
+					onClick={() =>
+						setAuthModal((prev) => ({ ...prev, view: 'resetPassword' }))
+					}
+				>
+					Reset
+				</Text>
+			</Flex>
+
+			<Flex fontSize="9pt" justify="center">
+				<Text mr={1}>New here ?</Text>
+				<Text
+					color="blue.500"
+					fontWeight={700}
+					cursor="pointer"
+					textTransform="uppercase"
+					onClick={() => setAuthModal((prev) => ({ ...prev, view: 'signup' }))}
+				>
+					sign up
+				</Text>
+			</Flex>
 		</>
 	);
 };

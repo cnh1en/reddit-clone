@@ -1,19 +1,12 @@
-import React, { useState } from 'react';
-import {
-	Button,
-	Flex,
-	FormControl,
-	FormErrorMessage,
-	Input,
-	Text,
-} from '@chakra-ui/react';
-import { useSetRecoilState } from 'recoil';
 import { authModalState } from '@/src/atoms/authModalAtom';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '@/src/firebase/clientApp';
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { FIREBASE_ERRORS } from '@/src/firebase/errors';
+import { Button, Flex, FormControl, Input, Text } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
+import * as yup from 'yup';
 
 type SignupProps = {
 	email: string;
@@ -24,17 +17,16 @@ type SignupProps = {
 const Signup = () => {
 	const schema = yup.object().shape({
 		email: yup.string().email().required(),
-		password: yup.string().min(8).max(32).required(),
+		password: yup
+			.string()
+			.min(8, 'Password must be at least 8 characters')
+			.max(32)
+			.required(),
 		confirmPassword: yup
 			.string()
-			.oneOf([yup.ref('password')], 'Passwords must match'),
+			.oneOf([yup.ref('password')], 'Confirm password must match'),
 	});
 
-	const [signupForm, setSignupForm] = useState({
-		email: '',
-		password: '',
-		confirmPassword: '',
-	});
 	const [createUserWithEmailAndPassword, user, loading, error] =
 		useCreateUserWithEmailAndPassword(auth);
 
@@ -48,17 +40,8 @@ const Signup = () => {
 		resolver: yupResolver(schema),
 	});
 
-	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setSignupForm((prev) => ({
-			...prev,
-			[event.target.name]: event.target.value,
-		}));
-	};
-	const onSubmit = () => {
-		if (signupForm.password !== signupForm.confirmPassword) {
-			// setError
-		}
-		createUserWithEmailAndPassword(signupForm.email, signupForm.password);
+	const onSubmit = (values: SignupProps) => {
+		createUserWithEmailAndPassword(values.email, values.password);
 	};
 
 	return (
@@ -85,7 +68,6 @@ const Signup = () => {
 					bg="gray.50"
 					{...register('email')}
 				/>
-				<FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
 				<Input
 					id="password"
 					type="password"
@@ -106,10 +88,8 @@ const Signup = () => {
 					}}
 					{...register('password')}
 					bg="gray.50"
-					my={3}
+					my={2}
 				/>
-				<FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
-
 				<Input
 					id="confirmPassword"
 					type="password"
@@ -131,13 +111,19 @@ const Signup = () => {
 					{...register('confirmPassword')}
 					bg="gray.50"
 				/>
-				<FormErrorMessage>{errors?.confirmPassword?.message}</FormErrorMessage>
 
+				<Text fontSize={12} mt={2} color="red" textAlign="center">
+					{errors.email?.message ||
+						errors.password?.message ||
+						errors.confirmPassword?.message ||
+						(error?.code &&
+							FIREBASE_ERRORS[error.code as keyof typeof FIREBASE_ERRORS])}
+				</Text>
 				<Button
 					variant="solid"
 					width="full"
 					height="36px"
-					my={4}
+					my={3}
 					type="submit"
 					isLoading={isSubmitting}
 				>

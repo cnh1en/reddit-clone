@@ -1,12 +1,14 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { auth } from '@/src/firebase/clientApp';
+import { Flex, Skeleton } from '@chakra-ui/react';
 import Image from 'next/image';
-import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import Directory from './Directory/Directory';
 import RightContent from './RightContent/RightContent';
 import SearchInput from './SearchInput';
 
-type NavbarProps = {};
-
 const Navbar = () => {
+	const [currentUser, loading] = useAuthState(auth);
+
 	return (
 		<Flex
 			bg="white"
@@ -16,8 +18,9 @@ const Navbar = () => {
 			gap={1}
 		>
 			<Image src="/images/redditlogo.png" alt="reddit" width={80} height={80} />
+			{currentUser && <Directory />}
 			<SearchInput />
-			<RightContent />
+			<RightContent user={currentUser} isLoading={loading} />
 		</Flex>
 	);
 };

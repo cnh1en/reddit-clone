@@ -1,28 +1,39 @@
-import React from 'react';
-import {
-	Button,
-	Flex,
-	Popover,
-	PopoverArrow,
-	PopoverBody,
-	PopoverCloseButton,
-	PopoverContent,
-	PopoverTrigger,
-	useDisclosure,
-} from '@chakra-ui/react';
-import AuthButtons from './AuthButtons';
+import { Flex, Skeleton, SkeletonCircle } from '@chakra-ui/react';
 import AuthModal from '../../Modal/Auth/AuthModal';
+import AuthButtons from './AuthButtons';
+import Icons from './Icons';
+import UserMenu from './UserMenu';
+import { FirebaseUser } from '@/src/types';
 
-type Props = {};
+type RightContentProps = {
+	user?: FirebaseUser | null;
+	isLoading: boolean;
+};
 
-const RightContent = (props: Props) => {
+const RightContent = ({ user, isLoading }: RightContentProps) => {
+	if (isLoading) {
+		return (
+			<Flex justify="center" align="center" gap={3}>
+				<Skeleton
+					height="30px"
+					width={{
+						base: 'none',
+						md: '200px',
+					}}
+				/>
+				<SkeletonCircle size="10" />
+			</Flex>
+		);
+	}
+
 	return (
 		<>
-			<Flex justifyContent="center" alignItems="center">
-				<AuthButtons />
-			</Flex>
-
 			<AuthModal />
+
+			<Flex justify="center" align="center" gap={3}>
+				{user ? <Icons /> : <AuthButtons />}
+				<UserMenu user={user} />
+			</Flex>
 		</>
 	);
 };
