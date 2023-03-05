@@ -17,7 +17,8 @@ import { IoSparkles } from 'react-icons/io5';
 import RedditAvatar from '../../Commons/Avatar';
 import type { FirebaseUser } from '@/src/types';
 import { useSetRecoilState } from 'recoil';
-import { authModalState } from '@/src/atoms/authModalAtom';
+import { AuthModalStateAtom } from '@/src/atoms/authModalAtom';
+import { CommunityStateAtom } from '@/src/atoms/communityAtom';
 
 type UserMenuProps = {
 	user?: FirebaseUser | null;
@@ -25,7 +26,13 @@ type UserMenuProps = {
 
 const UserMenu = ({ user }: UserMenuProps) => {
 	const [signOut] = useSignOut(auth);
-	const setAuthModal = useSetRecoilState(authModalState);
+	const setAuthModal = useSetRecoilState(AuthModalStateAtom);
+	const resetCommunityState = useSetRecoilState(CommunityStateAtom);
+
+	const logout = () => {
+		resetCommunityState({ mySnippets: [] });
+		signOut();
+	};
 
 	if (!user) {
 		return (
@@ -88,7 +95,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
 				</MenuItem>
 				<MenuDivider />
 				<MenuItem
-					onClick={() => signOut()}
+					onClick={logout}
 					_hover={{
 						bg: 'blue.500',
 						color: 'white',

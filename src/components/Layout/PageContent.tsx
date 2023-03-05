@@ -6,16 +6,12 @@ type PageContentProps = {
 };
 
 const PageContent = ({ children }: PageContentProps) => {
-	console.log(
-		'[LOG] ~ PageContent ~ children:',
-		children && children[0 as keyof typeof children]
-	);
 	return (
 		<Flex justify="center" padding="16px 0px" border="1px solid red">
 			<Flex
 				width="95%"
 				justify="center"
-				maxWidth="860px"
+				maxWidth="960px"
 				border="solid 1px green"
 			>
 				<Flex

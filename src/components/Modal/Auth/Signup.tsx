@@ -1,4 +1,4 @@
-import { authModalState } from '@/src/atoms/authModalAtom';
+import { AuthModalStateAtom } from '@/src/atoms/authModalAtom';
 import { auth, firestore } from '@/src/firebase/clientApp';
 import { FIREBASE_ERRORS } from '@/src/firebase/errors';
 import { Button, Flex, FormControl, Input, Text } from '@chakra-ui/react';
@@ -33,7 +33,7 @@ const Signup = () => {
 	const [createUserWithEmailAndPassword, userCred, loading, error] =
 		useCreateUserWithEmailAndPassword(auth);
 
-	const setAuthModal = useSetRecoilState(authModalState);
+	const setAuthModal = useSetRecoilState(AuthModalStateAtom);
 
 	const {
 		handleSubmit,

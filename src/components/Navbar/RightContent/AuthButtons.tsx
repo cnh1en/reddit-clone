@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Flex } from '@chakra-ui/react';
 import { useSetRecoilState } from 'recoil';
-import { authModalState } from '@/src/atoms/authModalAtom';
+import { AuthModalStateAtom } from '@/src/atoms/authModalAtom';
 import { ViewModalProps } from '@/src/types';
 
 type Props = {};
 
 const AuthButtons = () => {
-	const setAuthModal = useSetRecoilState(authModalState);
+	const setAuthModal = useSetRecoilState(AuthModalStateAtom);
 
 	const onOpenAuthModal = (view: ViewModalProps) => {
 		setAuthModal({

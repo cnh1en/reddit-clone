@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Flex, FormControl, Input, Text } from '@chakra-ui/react';
 import { useSetRecoilState } from 'recoil';
-import { authModalState } from '@/src/atoms/authModalAtom';
+import { AuthModalStateAtom } from '@/src/atoms/authModalAtom';
 import OAuthButtons from './OAuthButtons';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '@/src/firebase/clientApp';
@@ -13,7 +13,7 @@ const Login = () => {
 		password: '',
 	});
 
-	const setAuthModal = useSetRecoilState(authModalState);
+	const setAuthModal = useSetRecoilState(AuthModalStateAtom);
 
 	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setLoginForm((prev) => ({

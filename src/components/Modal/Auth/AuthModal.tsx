@@ -1,4 +1,4 @@
-import { authModalState } from '@/src/atoms/authModalAtom';
+import { AuthModalStateAtom } from '@/src/atoms/authModalAtom';
 import { auth } from '@/src/firebase/clientApp';
 import {
 	Button,
@@ -20,7 +20,7 @@ import { useRecoilState } from 'recoil';
 import AuthInputs from './AuthInputs';
 
 const AuthModal = () => {
-	const [authModal, setAuthModal] = useRecoilState(authModalState);
+	const [authModal, setAuthModal] = useRecoilState(AuthModalStateAtom);
 	const handleClose = useCallback(() => {
 		setAuthModal((prev) => ({ ...prev, open: false }));
 	}, [setAuthModal]);

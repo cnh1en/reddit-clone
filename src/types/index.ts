@@ -12,3 +12,13 @@ export type Community = {
 	createAt?: Timestamp;
 	imageURL?: string;
 };
+
+export type CommunitySnippet = {
+	communityId: string;
+	isModerator: boolean;
+	imageURL?: string;
+};
+
+export type CommunityState = {
+	mySnippets: CommunitySnippet[];
+};
