@@ -68,6 +68,7 @@ const CreatePostLink = ({}: Props) => {
 				borderRadius={4}
 				mr={4}
 				onClick={onClick}
+				isReadOnly
 			/>
 
 			<Flex align="center" gap={2} color="gray.300">
