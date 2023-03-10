@@ -8,6 +8,7 @@ import NotFound from '@/src/components/Community/NotFound';
 import Header from '@/src/components/Community/Header';
 import PageContent from '@/src/components/Layout/PageContent';
 import CreatePostLink from '@/src/components/Community/CreatePostLink';
+import Posts from '@/src/components/Post/Posts';
 
 type CommunityProps = {
 	communityData: Community;
@@ -24,13 +25,9 @@ const CommunityPage = ({ communityData }: CommunityProps) => {
 			<PageContent>
 				<>
 					<CreatePostLink />
+					<Posts communityData={communityData} />
 				</>
-				<>
-					<div>Hi</div>
-					<div>Hi</div>
-					<div>Hi</div>
-					<div>Hi</div>
-				</>
+				<></>
 			</PageContent>
 		</>
 	);

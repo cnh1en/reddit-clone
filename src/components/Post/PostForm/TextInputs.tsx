@@ -6,12 +6,14 @@ type TextInputProps = {
 		title: string;
 		body: string;
 	};
+	loading?: boolean;
 	onChange: (
 		event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
 	) => void;
+	onCreatePost: () => void;
 };
 
-const TextInputs = ({ onChange }: TextInputProps) => {
+const TextInputs = ({ textInputs, onChange, onCreatePost }: TextInputProps) => {
 	return (
 		<Flex width="full" bgColor="white">
 			<Flex direction="column" padding={8} flexGrow={1} gap={4}>
@@ -25,6 +27,7 @@ const TextInputs = ({ onChange }: TextInputProps) => {
 						fontSize: '13px',
 					}}
 					onChange={onChange}
+					value={textInputs.title}
 				/>
 				<Textarea
 					name="body"
@@ -34,6 +37,7 @@ const TextInputs = ({ onChange }: TextInputProps) => {
 						fontSize: '13px',
 					}}
 					onChange={onChange}
+					value={textInputs.body}
 				/>
 				<Button
 					flexGrow={0}
@@ -43,6 +47,7 @@ const TextInputs = ({ onChange }: TextInputProps) => {
 					borderRadius={30}
 					height={8}
 					fontSize={12}
+					onClick={onCreatePost}
 				>
 					post
 				</Button>
