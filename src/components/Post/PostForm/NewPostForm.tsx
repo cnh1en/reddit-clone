@@ -72,7 +72,7 @@ const NewPostForm = ({ user }: Props) => {
 		title: '',
 		body: '',
 	});
-	const [selectedFiles, setSelectedFiles] = useState<(string | Blob)[]>([]);
+	const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 	const [error, setError] = useState('');
 
 	const router = useRouter();
@@ -95,9 +95,7 @@ const NewPostForm = ({ user }: Props) => {
 
 			if (selectedFiles.length > 0) {
 				const imageRef = ref(storage, `post/${postRef.id}/image`);
-				await uploadBytes(imageRef, selectedFiles[0] as Blob, {
-					contentType: 'image/png',
-				});
+				await uploadString(imageRef, selectedFiles[0], 'data_url');
 				const downloadUrl = await getDownloadURL(imageRef);
 				await updateDoc(postRef, {
 					imageURL: downloadUrl,
@@ -110,10 +108,19 @@ const NewPostForm = ({ user }: Props) => {
 	};
 
 	const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const files = Array.from(event.target.files as FileList).map((file) =>
-			URL.createObjectURL(file)
-		);
-		setSelectedFiles((prev) => [...prev, ...files]);
+		const reader = new FileReader();
+		if (event.target.files?.[0]) {
+			reader.readAsDataURL(event.target.files[0]);
+		}
+
+		reader.onload = (readerEvent) => {
+			if (readerEvent.target?.result) {
+				setSelectedFiles((prev) => [
+					...prev,
+					readerEvent.target?.result as string,
+				]);
+			}
+		};
 	};
 
 	const onDeleteImage = () => {
