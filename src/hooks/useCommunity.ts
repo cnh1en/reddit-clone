@@ -143,6 +143,7 @@ const useCommunity = () => {
 		leave,
 		onJoinOrLeave,
 		communityStateValue,
+		setCommunityStateValue,
 	};
 };
 

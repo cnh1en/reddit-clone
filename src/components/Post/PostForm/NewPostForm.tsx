@@ -29,6 +29,7 @@ import {
 	uploadBytes,
 	uploadString,
 } from 'firebase/storage';
+import useSelectFile from '@/src/hooks/useSelectFile';
 
 const formTabs = [
 	{
@@ -72,8 +73,9 @@ const NewPostForm = ({ user }: Props) => {
 		title: '',
 		body: '',
 	});
-	const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 	const [error, setError] = useState('');
+
+	const { selectedFiles, setSelectedFiles, onSelectImage } = useSelectFile();
 
 	const router = useRouter();
 
@@ -105,22 +107,6 @@ const NewPostForm = ({ user }: Props) => {
 			setError(error?.message);
 			console.log('handleCreatePost', error);
 		}
-	};
-
-	const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const reader = new FileReader();
-		if (event.target.files?.[0]) {
-			reader.readAsDataURL(event.target.files[0]);
-		}
-
-		reader.onload = (readerEvent) => {
-			if (readerEvent.target?.result) {
-				setSelectedFiles((prev) => [
-					...prev,
-					readerEvent.target?.result as string,
-				]);
-			}
-		};
 	};
 
 	const onDeleteImage = () => {

@@ -9,7 +9,7 @@ export type Community = {
 	creatorId: string;
 	numberOfMembers: number;
 	privacyType: 'public' | 'restricted' | 'private';
-	createAt?: Timestamp;
+	createdAt?: Timestamp;
 	imageURL?: string;
 };
 
@@ -21,6 +21,7 @@ export type CommunitySnippet = {
 
 export type CommunityState = {
 	mySnippets: CommunitySnippet[];
+	currentCommunity: Community | null;
 };
 
 export type Post = {
