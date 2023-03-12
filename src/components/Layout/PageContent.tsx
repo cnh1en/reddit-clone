@@ -8,7 +8,7 @@ type PageContentProps = {
 const PageContent = ({ children }: PageContentProps) => {
 	return (
 		<Flex justify="center" padding="16px 0px">
-			<Flex width="95%" justify="center" maxWidth="960px">
+			<Flex width="95%" justify="center" maxWidth="960px" gap={6}>
 				<Flex
 					direction="column"
 					width={{

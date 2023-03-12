@@ -5,5 +5,6 @@ export const CommunityStateAtom = atom<CommunityState>({
 	key: 'communityState',
 	default: {
 		mySnippets: [],
+		currentCommunity: null,
 	},
 });

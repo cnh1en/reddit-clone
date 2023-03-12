@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { Button, Flex, ButtonProps, Box } from '@chakra-ui/react';
-import Image from 'next/image';
+import { Button, Flex, ButtonProps, Box, Image } from '@chakra-ui/react';
 
 type Props = {
-	images: (string | Blob)[];
+	images: string[];
 	onSelectFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onDeleteFile: () => void;
 	onBack: () => void;
@@ -20,6 +19,7 @@ const ImageUpload = ({ images, onSelectFile, onDeleteFile, onBack }: Props) => {
 			height="300px"
 			direction="column"
 			py={5}
+			gap={4}
 		>
 			<input
 				type="file"
@@ -33,17 +33,12 @@ const ImageUpload = ({ images, onSelectFile, onDeleteFile, onBack }: Props) => {
 				<Box flexGrow={1}>
 					{images.map((image, index: number) => (
 						<Image
+							key={index}
 							alt="index"
 							src={image as string}
-							width={400}
-							height={200}
-							style={{
-								maxWidth: '400px',
-								maxHeight: '200px',
-								borderRadius: 10,
-								objectFit: 'cover',
-							}}
-							key={index}
+							maxHeight="220px"
+							borderRadius={10}
+							objectFit="contain"
 						/>
 					))}
 				</Box>

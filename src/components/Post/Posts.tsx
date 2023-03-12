@@ -1,11 +1,12 @@
 import { auth, firestore } from '@/src/firebase/clientApp';
 import usePosts from '@/src/hooks/usePosts';
 import { Community, Post } from '@/src/types';
-import { Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import PostItem from './PostItem';
+import PostLoader from './PostLoader';
 
 type PostsProps = {
 	communityData: Community;
@@ -16,9 +17,11 @@ const Posts = ({ communityData, userId }: PostsProps) => {
 	const [currentUser] = useAuthState(auth);
 	const { postStateValue, setPostStateValue, onDelete, onSelect, onVote } =
 		usePosts();
+	const [isLoadingPosts, setIsLoadingPosts] = useState(false);
 
 	useEffect(() => {
 		const getPosts = async () => {
+			setIsLoadingPosts(true);
 			const postQuery = query(
 				collection(firestore, 'posts'),
 				where('communityId', '==', communityData.id),
@@ -33,9 +36,14 @@ const Posts = ({ communityData, userId }: PostsProps) => {
 			})) as Post[];
 
 			setPostStateValue((prev) => ({ ...prev, posts }));
+			setIsLoadingPosts(false);
 		};
 		getPosts();
 	}, [communityData.id, setPostStateValue]);
+
+	if (isLoadingPosts) {
+		return <PostLoader />;
+	}
 
 	return (
 		<Stack>
@@ -45,6 +53,7 @@ const Posts = ({ communityData, userId }: PostsProps) => {
 					isCreator={post.creatorId === currentUser?.uid}
 					voteValue={post.voteStatus}
 					post={post}
+					onDelete={onDelete}
 				/>
 			))}
 		</Stack>
