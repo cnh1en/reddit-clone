@@ -3,7 +3,7 @@ import usePosts from '@/src/hooks/usePosts';
 import { Community, Post } from '@/src/types';
 import { Box, Stack } from '@chakra-ui/react';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import PostItem from './PostItem';
 import PostLoader from './PostLoader';
@@ -17,7 +17,15 @@ const Posts = ({ communityData, userId }: PostsProps) => {
 	const [currentUser] = useAuthState(auth);
 	const { postStateValue, setPostStateValue, onDelete, onSelect, onVote } =
 		usePosts();
+
 	const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+
+	const hasVoted = useCallback(
+		(post: Post) =>
+			postStateValue.postVote?.length > 0 &&
+			!!postStateValue.postVote.find((item) => item.postId === post.id),
+		[postStateValue.postVote]
+	);
 
 	useEffect(() => {
 		const getPosts = async () => {
@@ -54,6 +62,8 @@ const Posts = ({ communityData, userId }: PostsProps) => {
 					voteValue={post.voteStatus}
 					post={post}
 					onDelete={onDelete}
+					onVote={onVote}
+					isVoted={hasVoted(post)}
 				/>
 			))}
 		</Stack>

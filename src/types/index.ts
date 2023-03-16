@@ -38,7 +38,15 @@ export type Post = {
 	createdAt: Timestamp;
 };
 
+export type PostVote = {
+	id: string;
+	postId: string;
+	communityId: string;
+	voteValue: number;
+};
+
 export type PostState = {
 	selectedPost: Post | null;
 	posts: Post[];
+	postVote: PostVote[]; // Posts were voted by current user
 };

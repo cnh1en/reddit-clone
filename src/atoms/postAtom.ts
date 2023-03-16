@@ -6,5 +6,6 @@ export const PostStateAtom = atom<PostState>({
 	default: {
 		selectedPost: null,
 		posts: [],
+		postVote: [],
 	},
 });

@@ -26,13 +26,15 @@ type PostItemProps = {
 	post: Post;
 	isCreator: boolean;
 	voteValue: number;
-	onVote?: () => {};
+	isVoted: boolean;
+	onVote: (post: Post, vote: number, communityId: string) => void;
 	onDelete: (post: Post) => Promise<boolean>;
 	onSelect?: () => {};
 };
 
 const PostItem = ({
 	isCreator,
+	isVoted,
 	onDelete,
 	onSelect,
 	onVote,
@@ -41,6 +43,7 @@ const PostItem = ({
 }: PostItemProps) => {
 	const [isLoadingImage, setIsLoadingImage] = useState(true);
 	const [isLoadingDeletePost, setIsLoadingDeletePost] = useState(false);
+	console.log({ isVoted });
 
 	const handleDelete = async () => {
 		setIsLoadingDeletePost(true);
@@ -62,6 +65,7 @@ const PostItem = ({
 			cursor="pointer"
 			onClick={onSelect}
 		>
+			{isVoted && 'Test'}
 			<Flex
 				direction="column"
 				align="center"
@@ -73,7 +77,7 @@ const PostItem = ({
 				<Icon
 					as={voteValue === 1 ? IoArrowUpCircle : IoArrowUpCircleOutline}
 					color={voteValue === 1 ? 'brand.100' : 'gray.400'}
-					onClick={onVote}
+					onClick={() => onVote(post, 1, post.communityId)}
 				/>
 				<Text fontSize="9pt">{post.voteStatus}</Text>
 
@@ -82,7 +86,7 @@ const PostItem = ({
 						voteValue === -1 ? IoArrowDownCircleSharp : IoArrowDownCircleOutline
 					}
 					color={voteValue === 1 ? '#4379ff' : 'gray.400'}
-					onClick={onVote}
+					onClick={() => onVote(post, -1, post.communityId)}
 				/>
 			</Flex>
 

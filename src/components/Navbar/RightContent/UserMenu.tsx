@@ -30,7 +30,10 @@ const UserMenu = ({ user }: UserMenuProps) => {
 	const resetCommunityState = useSetRecoilState(CommunityStateAtom);
 
 	const logout = () => {
-		resetCommunityState({ mySnippets: [] });
+		resetCommunityState((prevCommunityState) => ({
+			...prevCommunityState,
+			mySnippets: [],
+		}));
 		signOut();
 	};
 
